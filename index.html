@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Welcher Zukunftstyp bist du?</title>
+<meta name="description" content="Das Zukunftsquiz – 15 Fragen, 7 Typen, Sofort-Ergebnis. Finde heraus, ob du Captain Futures, Fluxus-Surfer oder Souveräner Müßiggänger bist.">
+<meta property="og:title" content="Welcher Zukunftstyp bist du?">
+<meta property="og:description" content="15 Fragen, 7 Typen, 3 Minuten. Mach das Zukunftsquiz!">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+.screen{min-height:100vh;min-height:100dvh;display:none;flex-direction:column}
+.screen.active{display:flex}
+.fade-in{animation:fadeIn .5s ease}
+.slide-up{animation:slideUp .5s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.delay-1{animation-delay:.15s;animation-fill-mode:both}
+.delay-2{animation-delay:.3s;animation-fill-mode:both}
+.delay-3{animation-delay:.5s;animation-fill-mode:both}
+.delay-4{animation-delay:.7s;animation-fill-mode:both}
+.delay-5{animation-delay:.9s;animation-fill-mode:both}
+
+/* Start */
+.start-bg{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 40%,#4c1d95 100%);color:#fff;align-items:center;justify-content:center;text-align:center;padding:2rem}
+.start-emoji{font-size:4.5rem;margin-bottom:1.5rem;animation:bounce 2s infinite}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.start-title{font-size:2.2rem;font-weight:800;line-height:1.2;margin-bottom:.5rem}
+.start-sub{color:#a5b4fc;font-size:1rem;margin-bottom:.3rem}
+.start-hint{color:#818cf8;font-size:.8rem;margin-bottom:2rem;opacity:.7}
+.start-btn{background:#fff;color:#312e81;border:none;padding:1rem 2.5rem;border-radius:1rem;font-size:1.1rem;font-weight:700;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.2);transition:transform .15s}
+.start-btn:active{transform:scale(.96)}
+.start-footer{color:#6366f1;font-size:.7rem;margin-top:1.5rem;opacity:.5}
+
+/* Question */
+.q-bg{background:linear-gradient(180deg,#f8fafc,#eef2ff);padding:1.5rem 1.25rem;flex:1}
+.q-inner{max-width:480px;margin:0 auto;width:100%;display:flex;flex-direction:column;flex:1}
+.q-meta{display:flex;justify-content:space-between;font-size:.8rem;color:#94a3b8;margin-bottom:.3rem}
+.q-meta-active{color:#6366f1;font-weight:600}
+.q-progress{width:100%;height:6px;background:#e2e8f0;border-radius:3px;margin-bottom:1.5rem;overflow:hidden}
+.q-progress-bar{height:100%;background:linear-gradient(90deg,#6366f1,#a855f7);border-radius:3px;transition:width .4s ease}
+.q-text{font-size:1.3rem;font-weight:700;color:#1e293b;line-height:1.35;margin-bottom:1.5rem}
+.q-answers{display:flex;flex-direction:column;gap:.6rem}
+.q-btn{width:100%;text-align:left;padding:.9rem 1rem;border-radius:.8rem;border:2px solid #e2e8f0;background:#fff;color:#374151;font-size:.95rem;line-height:1.4;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.q-btn:active{transform:scale(.98)}
+.q-btn.selected{background:#6366f1;color:#fff;border-color:transparent;box-shadow:0 4px 12px rgba(99,102,241,.3)}
+.q-btn:nth-child(1){border-color:#c7d2fe;background:#eef2ff}
+.q-btn:nth-child(2){border-color:#ddd6fe;background:#f5f3ff}
+.q-btn:nth-child(3){border-color:#fce7f3;background:#fdf2f8}
+.q-btn:nth-child(4){border-color:#e9d5ff;background:#faf5ff}
+
+/* Result */
+.r-bg{background:linear-gradient(180deg,#1e1b4b 0%,#312e81 25%,#4338ca 100%);min-height:100vh;min-height:100dvh}
+.r-inner{max-width:480px;margin:0 auto;padding:1.5rem 1.25rem 3rem}
+.r-reveal{text-align:center;margin-bottom:1.5rem}
+.r-label{color:#a5b4fc;font-size:.7rem;text-transform:uppercase;letter-spacing:.15em;margin-bottom:.5rem}
+.r-emoji{font-size:4.5rem;margin-bottom:.5rem}
+.r-name{font-size:1.8rem;font-weight:800;color:#fff}
+.r-sub{font-size:1.1rem;color:#a5b4fc}
+.r-card{background:#fff;border-radius:1rem;padding:1.25rem;margin-bottom:.8rem;box-shadow:0 4px 20px rgba(0,0,0,.15)}
+.r-desc{color:#374151;font-size:.9rem;line-height:1.6;margin-bottom:.8rem}
+.r-traits{display:flex;flex-wrap:wrap;gap:.4rem}
+.r-trait{padding:.3rem .7rem;border-radius:2rem;font-size:.75rem;font-weight:600}
+.r-kombi{background:rgba(255,255,255,.1);backdrop-filter:blur(10px);border-radius:1rem;padding:1.25rem;margin-bottom:.8rem}
+.r-kombi-head{display:flex;align-items:center;gap:.4rem;margin-bottom:.5rem}
+.r-kombi-head span{font-size:1.3rem}
+.r-kombi-label{color:#fff;font-size:.85rem;font-weight:600;margin-left:.3rem}
+.r-kombi-text{color:#e0e7ff;font-size:.85rem;line-height:1.55;font-style:italic}
+.r-chart-title{font-size:.7rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.1em;margin-bottom:.5rem}
+.r-bars{display:flex;flex-direction:column;gap:.4rem;margin-top:.8rem}
+.r-bar-row{display:flex;align-items:center;gap:.5rem}
+.r-bar-emoji{font-size:1rem;width:1.5rem;text-align:center}
+.r-bar-name{font-size:.75rem;color:#64748b;width:4.5rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.r-bar-track{flex:1;height:8px;background:#f1f5f9;border-radius:4px;overflow:hidden}
+.r-bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.r-bar-pct{font-size:.7rem;color:#94a3b8;width:2rem;text-align:right}
+.r-actions{margin-top:1rem}
+.r-action-btn{width:100%;padding:.85rem;border-radius:.8rem;border:none;font-size:.9rem;font-weight:600;cursor:pointer;margin-bottom:.5rem;transition:all .15s}
+.r-action-btn:active{transform:scale(.97)}
+.r-action-primary{background:#6366f1;color:#fff}
+.r-action-secondary{background:rgba(255,255,255,.1);color:#fff}
+.r-tip{margin-top:.8rem;padding:.8rem;background:rgba(255,255,255,.05);border-radius:.8rem;text-align:center}
+.r-tip-text{font-size:.75rem;color:#a5b4fc;line-height:1.4}
+.r-footer{text-align:center;color:#6366f1;font-size:.7rem;opacity:.4;margin-top:1.5rem}
+
+/* Radar SVG */
+.radar-wrap{display:flex;justify-content:center;margin-bottom:.5rem}
+.radar-wrap svg{width:100%;max-width:280px}
+
+/* Share overlay */
+.share-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem}
+.share-card{background:#fff;border-radius:1.2rem;padding:1.5rem;max-width:320px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.3)}
+.share-card-center{text-align:center;margin-bottom:1rem}
+.share-card-emoji{font-size:3rem;margin-bottom:.3rem}
+.share-card-name{font-size:1.2rem;font-weight:700;color:#1e293b}
+.share-card-sub{font-size:.85rem;color:#64748b}
+.share-card-kombi{background:#f8fafc;border-radius:.8rem;padding:.8rem;margin-bottom:1rem}
+.share-card-kombi-text{font-size:.75rem;color:#475569;line-height:1.5;font-style:italic}
+.share-card-types{display:flex;justify-content:space-between;margin-bottom:1rem;padding:0 .3rem}
+.share-card-type{display:flex;flex-direction:column;align-items:center;gap:.1rem}
+.share-card-type-emoji{font-size:.9rem}
+.share-card-type-pct{font-size:.65rem;font-weight:700}
+.share-card-footer{text-align:center;font-size:.65rem;color:#cbd5e1}
+.share-card-tip{text-align:center;margin-top:1rem;padding-top:.8rem;border-top:1px solid #f1f5f9}
+.share-card-tip-text{font-size:.75rem;color:#64748b}
+.share-close{margin-top:.8rem;width:100%;padding:.7rem;border:none;background:#f1f5f9;color:#475569;border-radius:.6rem;font-size:.85rem;font-weight:500;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- ════════ START SCREEN ════════ -->
+<div id="screen-start" class="screen active start-bg">
+  <div class="start-emoji">🔮</div>
+  <div class="start-title">Welcher Zukunftstyp<br>bist du?</div>
+  <div class="start-sub">15 Fragen · 7 Typen · 3 Minuten</div>
+  <div class="start-hint">Von Captain Futures bis Souveräne Müßiggänger</div>
+  <button class="start-btn" onclick="startQuiz()">Los geht's →</button>
+  <div class="start-footer">Kein Login · Sofort-Ergebnis</div>
+</div>
+
+<!-- ════════ QUESTION SCREEN ════════ -->
+<div id="screen-question" class="screen q-bg">
+  <div class="q-inner">
+    <div class="q-meta">
+      <span class="q-meta-active" id="q-counter">Frage 1 von 15</span>
+      <span id="q-pct">7%</span>
+    </div>
+    <div class="q-progress"><div class="q-progress-bar" id="q-bar" style="width:7%"></div></div>
+    <div class="q-text" id="q-text"></div>
+    <div class="q-answers" id="q-answers"></div>
+  </div>
+</div>
+
+<!-- ════════ RESULT SCREEN ════════ -->
+<div id="screen-result" class="screen r-bg"></div>
+
+<!-- ════════ DATA & LOGIC ════════ -->
+<script>
+// ─── TYPES ───
+const TYPES = {
+  captain:  { name:"Captain Futures", sub:"Die Zuversichtlichen", emoji:"🚀", color:"#6366f1" },
+  fluxus:   { name:"Fluxus-Surfer", sub:"Die Verspielten", emoji:"🎨", color:"#9333ea" },
+  techno:   { name:"Techno-Pioniere", sub:"Die Digitalisierer", emoji:"⚡", color:"#0891b2" },
+  oeko:     { name:"Öko-Visionäre", sub:"Die Regenerativen", emoji:"🌱", color:"#059669" },
+  routinier:{ name:"Gegenwarts-Routiniers", sub:"Die Bodenständigen", emoji:"🏡", color:"#d97706" },
+  retro:    { name:"Retro-Rebellen", sub:"Die Nostalgischen", emoji:"📻", color:"#dc2626" },
+  muessig:  { name:"Souveräne Müßiggänger", sub:"Die Gelassenen", emoji:"🐢", color:"#64748b" }
+};
+const TK = ["captain","fluxus","techno","oeko","routinier","retro","muessig"];
+
+// ─── KOMBI-TEXTE (21 Paare) ───
+const KOMBI = {
+  "captain+fluxus":   "Du gestaltest Zukunft — aber nicht nach Plan, sondern mit spielerischer Leichtigkeit. Dein Optimismus steckt an, weil er nie verbissen wirkt.",
+  "captain+techno":   "Du willst die Welt verändern — und hast die digitalen Werkzeuge dafür. Vision trifft Umsetzungskraft.",
+  "captain+oeko":     "Du denkst groß und grün. Für dich ist Nachhaltigkeit kein Verzicht, sondern der ambitionierteste Zukunftsentwurf überhaupt.",
+  "captain+routinier":"Du träumst von morgen, aber verlierst heute nicht aus dem Blick. Dein Idealismus hat Bodenhaftung.",
+  "captain+retro":    "Du willst nach vorn — aber mit Respekt vor dem, was war. Tradition und Vision schließen sich für dich nicht aus.",
+  "captain+muessig":  "Du gestaltest Zukunft, aber weißt auch, wann man loslassen muss. Dein Antrieb hat eine eingebaute Pause-Taste.",
+  "fluxus+techno":    "Du experimentierst gern — und greifst dabei zu digitalen Werkzeugen. Dein Spielplatz ist das Netz, dein Material ist Code und Fantasie.",
+  "fluxus+oeko":      "Du bist die Kreative mit dem grünen Herzen. Deine verrücktesten Ideen dienen am Ende immer der Erde.",
+  "fluxus+routinier": "Chaotisch kreativ — aber pünktlich zum Abendessen. Du brauchst beides: den Freiraum und das Zuhause.",
+  "fluxus+retro":     "Du liebst das Neue, verehrst aber das Alte. Dein Remix aus Tradition und Experiment ist einzigartig.",
+  "fluxus+muessig":   "Du bist die Spielerin, die auch mal nichts tut — und genau dann die besten Ideen hat. Dein Müßiggang ist produktiv.",
+  "techno+oeko":      "Green Tech ist dein Ding. Du glaubst, dass Technologie und Natur keine Gegensätze sind — sondern Partner.",
+  "techno+routinier": "Du liebst smarte Lösungen — solange sie im Alltag funktionieren. Innovation muss bei dir den Praxistest bestehen.",
+  "techno+retro":     "Du weißt: Die beste Technologie lernt von der Vergangenheit. Dein Fortschrittsglaube hat ein historisches Fundament.",
+  "techno+muessig":   "Du automatisierst — damit du mehr Zeit zum Nichtstun hast. Effizienz im Dienst der Gelassenheit.",
+  "oeko+routinier":   "Du lebst Nachhaltigkeit im Kleinen — jeden Tag, ohne großes Aufheben. Dein grünes Herz schlägt leise, aber beständig.",
+  "oeko+retro":       "Du erinnerst uns daran, dass unsere Großeltern die besseren Ökologen waren. Dein Blick zurück ist eine Zukunftsstrategie.",
+  "oeko+muessig":     "Du weißt, dass die Natur Pausen braucht — und du auch. Dein ökologisches Denken schließt Ruhe und Regeneration ausdrücklich ein.",
+  "routinier+retro":  "Du schätzt das Bewährte und hältst den Laden zusammen. In einer Welt voller Veränderung bist du der Anker.",
+  "routinier+muessig":"Du hast verstanden, was viele erst lernen müssen: Nicht alles muss ständig besser werden. Manchmal reicht es, wenn es gut ist.",
+  "retro+muessig":    "Du brauchst weder Fortschritt noch Hektik. Deine Gelassenheit kommt aus dem Wissen, dass die wichtigen Dinge zeitlos sind."
+};
+
+function getKombiText(k1, k2) {
+  return KOMBI[k1+"+"+k2] || KOMBI[k2+"+"+k1] || "";
+}
+
+// ─── QUESTIONS with 7-type scoring ───
+const QS = [
+  { q:"Dein Kiez bekommt eine Million Euro – wofür?", a:[
+    { t:"Ein Zukunftslabor, in dem Bürger:innen neue Ideen für den Stadtteil entwickeln", s:{captain:4,fluxus:2,techno:1,oeko:1,routinier:0,retro:0,muessig:0} },
+    { t:"Eine interaktive Kunstinstallation, die sich jede Woche verändert", s:{captain:1,fluxus:4,techno:2,oeko:0,routinier:0,retro:0,muessig:1} },
+    { t:"Grüne Dachgärten und Solaranlagen auf jedem Haus", s:{captain:1,fluxus:0,techno:1,oeko:4,routinier:1,retro:0,muessig:0} },
+    { t:"Den Platz am Kaisersteg zu einem lebendigen Ort machen", s:{captain:2,fluxus:1,techno:0,oeko:2,routinier:2,retro:0,muessig:3} }
+  ]},
+  { q:"Was gehört zu Schöneweide als Campus der Zukünfte?", a:[
+    { t:"Offene Lernlabore, Maker-Spaces und vertikale Gärten", s:{captain:3,fluxus:1,techno:2,oeko:3,routinier:0,retro:0,muessig:0} },
+    { t:"KI-Tutoren, VR-Räume und ein Holodeck zum Experimentieren", s:{captain:2,fluxus:2,techno:4,oeko:0,routinier:0,retro:0,muessig:0} },
+    { t:"Gemütliche Sofas, guter Kaffee und Rückzugsräume", s:{captain:0,fluxus:1,techno:0,oeko:0,routinier:2,retro:1,muessig:4} },
+    { t:"Offene Räume und ein Austausch mit Jung und Alt", s:{captain:2,fluxus:1,techno:0,oeko:1,routinier:2,retro:2,muessig:2} }
+  ]},
+  { q:"Demokratie 2035 – was braucht sie am meisten?", a:[
+    { t:"Bürger:innen-Räte, die wirklich mitentscheiden dürfen", s:{captain:4,fluxus:1,techno:1,oeko:2,routinier:0,retro:0,muessig:0} },
+    { t:"Mehr kreative Formate – Theater, Spiele, Festivals der Demokratie", s:{captain:1,fluxus:4,techno:0,oeko:1,routinier:0,retro:1,muessig:1} },
+    { t:"Digitale Abstimmungstools und transparente KI-gestützte Entscheidungshilfen", s:{captain:1,fluxus:0,techno:4,oeko:0,routinier:2,retro:0,muessig:0} },
+    { t:"Mehr Respekt vor Institutionen und bewährten Verfahren", s:{captain:0,fluxus:0,techno:0,oeko:0,routinier:3,retro:3,muessig:2} }
+  ]},
+  { q:"Du hast eine Zeitmaschine – wohin?", a:[
+    { t:"Ins Jahr 2150 – sehen, ob die Menschheit es geschafft hat", s:{captain:4,fluxus:2,techno:2,oeko:1,routinier:0,retro:0,muessig:0} },
+    { t:"Zum ersten intergalaktischen Meeting im Jahr 2525", s:{captain:1,fluxus:4,techno:1,oeko:0,routinier:0,retro:0,muessig:1} },
+    { t:"Ins nächste Jahr – schauen, was mich erwartet, und gut vorbereiten", s:{captain:0,fluxus:0,techno:1,oeko:0,routinier:4,retro:2,muessig:0} },
+    { t:"In die 80er – Mixtapes, analoge Freiheit und keine Smartphones", s:{captain:0,fluxus:1,techno:0,oeko:0,routinier:1,retro:3,muessig:3} }
+  ]},
+  { q:"Welches Wissen möchtest du als nächstes erlernen?", a:[
+    { t:"Radikale Kompromisse aushandeln – die Kunst des Zusammenbringens", s:{captain:4,fluxus:1,techno:0,oeko:2,routinier:1,retro:0,muessig:1} },
+    { t:"Prompt Engineering, KI-Orchestrierung und Datenanalyse", s:{captain:1,fluxus:0,techno:4,oeko:0,routinier:2,retro:0,muessig:0} },
+    { t:"Permakultur, Kreislaufwirtschaft und Regeneratives Design", s:{captain:1,fluxus:1,techno:0,oeko:4,routinier:1,retro:1,muessig:1} },
+    { t:"Alte Handwerkskunst – Tischlern, Schmieden, Buchbinden", s:{captain:0,fluxus:1,techno:0,oeko:1,routinier:1,retro:3,muessig:3} }
+  ]},
+  { q:"Wer inspiriert dich am meisten?", a:[
+    { t:"Aktivist:innen, die Systeme verändern – von Mandela bis Thunberg", s:{captain:4,fluxus:0,techno:0,oeko:3,routinier:0,retro:0,muessig:0} },
+    { t:"Kreative Denker:innen – Banksy, Björk, Maria Ressa", s:{captain:0,fluxus:4,techno:1,oeko:1,routinier:0,retro:1,muessig:1} },
+    { t:"Tech-Visionäre, die das Unmögliche möglich machen", s:{captain:2,fluxus:0,techno:4,oeko:0,routinier:1,retro:0,muessig:0} },
+    { t:"Meine Großeltern – die wussten, was zählt", s:{captain:0,fluxus:0,techno:0,oeko:0,routinier:2,retro:3,muessig:3} }
+  ]},
+  { q:"Womit lädst du dein smartes Leben auf?", a:[
+    { t:"Sonne, Wind und Gemeinschafts-Energie", s:{captain:2,fluxus:0,techno:1,oeko:4,routinier:1,retro:0,muessig:0} },
+    { t:"Tanzen, Festivals und kollektive Energie", s:{captain:0,fluxus:4,techno:0,oeko:0,routinier:1,retro:1,muessig:1} },
+    { t:"Smarte Netze, die automatisch optimieren", s:{captain:1,fluxus:0,techno:4,oeko:1,routinier:2,retro:0,muessig:0} },
+    { t:"Muskelkraft, Kaminfeuer und echtes Holz", s:{captain:0,fluxus:0,techno:0,oeko:1,routinier:1,retro:3,muessig:3} }
+  ]},
+  { q:"Dein Zukunfts-Job – welcher wäre es?", a:[
+    { t:"Transformations-Coach für Städte und Organisationen", s:{captain:4,fluxus:1,techno:1,oeko:2,routinier:0,retro:0,muessig:0} },
+    { t:"KI-Flüsterer – Mensch-Maschine-Beziehungen gestalten", s:{captain:2,fluxus:1,techno:4,oeko:0,routinier:0,retro:0,muessig:0} },
+    { t:"Stadtteil-Gärtner:in mit Urban-Farming-Konzept", s:{captain:1,fluxus:1,techno:0,oeko:4,routinier:2,retro:1,muessig:1} },
+    { t:"Hüter:in eines analogen Kulturorts – Kino, Buchladen, Café", s:{captain:0,fluxus:1,techno:0,oeko:0,routinier:2,retro:3,muessig:3} }
+  ]},
+  { q:"Zukunftsessen – was liegt auf deinem Teller?", a:[
+    { t:"Vertical-Farm-Salat mit Lab-Grown-Protein", s:{captain:2,fluxus:1,techno:4,oeko:2,routinier:0,retro:0,muessig:0} },
+    { t:"Ein verrücktes Fusion-Gericht, das noch keinen Namen hat", s:{captain:1,fluxus:4,techno:1,oeko:0,routinier:0,retro:0,muessig:1} },
+    { t:"Saisonale Zutaten vom Gemeinschaftsgarten", s:{captain:1,fluxus:0,techno:0,oeko:4,routinier:2,retro:1,muessig:1} },
+    { t:"Currywurst rotweiss", s:{captain:0,fluxus:0,techno:0,oeko:0,routinier:2,retro:2,muessig:4} }
+  ]},
+  { q:"Welcher Sound ist dein Zukunfts-Soundtrack?", a:[
+    { t:"KI-generierte Kompositionen, die sich deiner Stimmung anpassen", s:{captain:1,fluxus:1,techno:4,oeko:0,routinier:1,retro:0,muessig:0} },
+    { t:"Rave im Gemeinschaftsgarten, Elektro trifft Vogelgezwitscher", s:{captain:0,fluxus:4,techno:1,oeko:2,routinier:0,retro:0,muessig:1} },
+    { t:"Podcast-Mix nach Lust und Laune", s:{captain:2,fluxus:0,techno:1,oeko:0,routinier:4,retro:0,muessig:1} },
+    { t:"Vinyl-Platten, echtes Knistern, echte Seele", s:{captain:0,fluxus:1,techno:0,oeko:0,routinier:1,retro:3,muessig:3} }
+  ]},
+  { q:"Dein liebstes Zukunfts-Haustier?", a:[
+    { t:"Ein treuer Hund – der beste Freund seit Jahrtausenden", s:{captain:0,fluxus:0,techno:0,oeko:0,routinier:2,retro:2,muessig:3} },
+    { t:"Ein Mini-Drache – warum nicht?", s:{captain:1,fluxus:4,techno:1,oeko:0,routinier:0,retro:0,muessig:1} },
+    { t:"Bienen und Schmetterlinge im Balkongarten", s:{captain:0,fluxus:0,techno:0,oeko:4,routinier:2,retro:1,muessig:2} },
+    { t:"Mein Chatbot, der mich wirklich versteht", s:{captain:1,fluxus:1,techno:4,oeko:0,routinier:0,retro:0,muessig:1} }
+  ]},
+  { q:"Schöneweide 2038 – was überrascht dich?", a:[
+    { t:"Ein Bürger:innen-geführtes Innovationsquartier an der Spree", s:{captain:4,fluxus:1,techno:2,oeko:2,routinier:0,retro:0,muessig:0} },
+    { t:"Die 7. Futura-Biennale gastiert in Venedig", s:{captain:1,fluxus:4,techno:0,oeko:0,routinier:0,retro:0,muessig:1} },
+    { t:"Der Ufer-Weg ist frei und Solarboote auf der Spree", s:{captain:1,fluxus:1,techno:1,oeko:4,routinier:1,retro:0,muessig:1} },
+    { t:"Die Wilhelminenhofstraße – nichts hat sich verändert", s:{captain:0,fluxus:0,techno:0,oeko:0,routinier:2,retro:2,muessig:4} }
+  ]},
+  { q:"Wo schläfst du in 20 Jahren?", a:[
+    { t:"In einer autarken Tiny-House-Community auf dem Dach", s:{captain:3,fluxus:1,techno:1,oeko:3,routinier:0,retro:0,muessig:1} },
+    { t:"Im Baumhaus mit Aufzug und Lichtinstallation", s:{captain:1,fluxus:4,techno:1,oeko:1,routinier:0,retro:0,muessig:0} },
+    { t:"Im eigenen Bett mit smarter Schlafoptimierung", s:{captain:0,fluxus:0,techno:3,oeko:0,routinier:4,retro:0,muessig:1} },
+    { t:"Holzhütte, Ofenfeuer, Sternenhimmel durchs Fenster", s:{captain:0,fluxus:0,techno:0,oeko:1,routinier:1,retro:3,muessig:4} }
+  ]},
+  { q:"Welches Ritual soll auf jeden Fall bleiben?", a:[
+    { t:"Weihnachten als letzter Ort für Gemeinsamkeit und Ruhe", s:{captain:1,fluxus:0,techno:0,oeko:0,routinier:3,retro:3,muessig:2} },
+    { t:"Nö – verrat ich nicht", s:{captain:1,fluxus:2,techno:0,oeko:0,routinier:1,retro:0,muessig:4} },
+    { t:"Essen mit Lieblingsmenschen – immer sonntags", s:{captain:0,fluxus:0,techno:0,oeko:1,routinier:4,retro:2,muessig:1} },
+    { t:"Sonntagszeitung auf Papier – in Ruhe blättern", s:{captain:0,fluxus:0,techno:0,oeko:0,routinier:2,retro:3,muessig:2} }
+  ]},
+  { q:"Klimawandel 2045 – deine Strategie?", a:[
+    { t:"Lokale Klimaräte aufbauen, Nachbarschaften transformieren", s:{captain:4,fluxus:0,techno:1,oeko:3,routinier:0,retro:0,muessig:0} },
+    { t:"Schwammstädte designen – Krise als Kreativmotor!", s:{captain:1,fluxus:4,techno:2,oeko:2,routinier:0,retro:0,muessig:0} },
+    { t:"Geoengineering, KI-gestützte Klimasteuerung, Tech-Lösungen", s:{captain:1,fluxus:0,techno:4,oeko:0,routinier:2,retro:0,muessig:0} },
+    { t:"Regenjacke, Ventilator und Pragmatismus – wird schon", s:{captain:0,fluxus:0,techno:0,oeko:0,routinier:3,retro:2,muessig:4} }
+  ]}
+];
+
+// ─── STATE ───
+let currentQ = 0;
+let scores = {};
+TK.forEach(k => scores[k] = 0);
+let locked = false;
+
+// ─── NAVIGATION ───
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-'+id).classList.add('active');
+}
+
+function startQuiz() {
+  currentQ = 0;
+  TK.forEach(k => scores[k] = 0);
+  showScreen('question');
+  renderQuestion();
+}
+
+function renderQuestion() {
+  locked = false;
+  const q = QS[currentQ];
+  const pct = Math.round(((currentQ+1)/QS.length)*100);
+  document.getElementById('q-counter').textContent = `Frage ${currentQ+1} von ${QS.length}`;
+  document.getElementById('q-pct').textContent = pct+'%';
+  document.getElementById('q-bar').style.width = pct+'%';
+  document.getElementById('q-text').textContent = q.q;
+  const wrap = document.getElementById('q-answers');
+  wrap.innerHTML = '';
+  q.a.forEach((ans, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'q-btn fade-in';
+    btn.style.animationDelay = (i*80)+'ms';
+    btn.textContent = ans.t;
+    btn.onclick = () => selectAnswer(i, btn);
+    wrap.appendChild(btn);
+  });
+}
+
+function selectAnswer(idx, btn) {
+  if (locked) return;
+  locked = true;
+  btn.classList.add('selected');
+  const s = QS[currentQ].a[idx].s;
+  TK.forEach(k => scores[k] += (s[k]||0));
+  setTimeout(() => {
+    currentQ++;
+    if (currentQ >= QS.length) { showResult(); }
+    else { renderQuestion(); }
+  }, 350);
+}
+
+// ─── RESULT ───
+function showResult() {
+  const sorted = TK.map(k=>({k,s:scores[k]})).sort((a,b)=>b.s-a.s);
+  const w = sorted[0], r = sorted[1];
+  const wt = TYPES[w.k], rt = TYPES[r.k];
+  const maxS = Math.max(...sorted.map(x=>x.s), 1);
+  const kombi = getKombiText(w.k, r.k);
+
+  // Radar
+  const radarSVG = buildRadar(sorted, maxS);
+
+  const container = document.getElementById('screen-result');
+  container.innerHTML = `
+    <div class="r-inner">
+      <div class="r-reveal slide-up">
+        <div class="r-label">Dein Zukunftstyp</div>
+        <div class="r-emoji">${wt.emoji}</div>
+        <div class="r-name">${wt.name}</div>
+        <div class="r-sub">${wt.sub}</div>
+      </div>
+
+      <div class="r-card slide-up delay-1">
+        <div class="r-desc">${getDescription(w.k)}</div>
+        <div class="r-traits">${getTraits(w.k).map(t=>`<span class="r-trait" style="background:${wt.color}18;color:${wt.color}">${t}</span>`).join('')}</div>
+      </div>
+
+      <div class="r-kombi slide-up delay-2">
+        <div class="r-kombi-head">
+          <span>${wt.emoji}</span><span style="color:#a5b4fc;font-size:.9rem">+</span><span>${rt.emoji}</span>
+          <span class="r-kombi-label">Deine Kombination</span>
+        </div>
+        <div class="r-kombi-text">„${kombi}"</div>
+      </div>
+
+      <div class="r-card slide-up delay-3">
+        <div class="r-chart-title">Dein Zukunftsprofil</div>
+        <div class="radar-wrap">${radarSVG}</div>
+        <div class="r-bars" id="r-bars"></div>
+      </div>
+
+      <div class="r-card slide-up delay-4 r-actions">
+        <button class="r-action-btn r-action-primary" onclick="showShareCard()">📸 Ergebnis-Karte anzeigen</button>
+        <button class="r-action-btn r-action-secondary" style="background:#f1f5f9;color:#475569" onclick="copyLink()">📋 Quiz-Link kopieren</button>
+        <button class="r-action-btn r-action-secondary" style="background:#f1f5f9;color:#475569" onclick="startQuiz()">🔄 Nochmal spielen</button>
+        <div class="r-tip"><div class="r-tip-text">💡 Mach einen Screenshot — dann hast du dein Profil immer dabei.</div></div>
+      </div>
+
+      <div class="r-footer">Das Zukunftsquiz · 2026</div>
+    </div>
+  `;
+
+  showScreen('result');
+
+  // Animate bars
+  setTimeout(() => {
+    const barsEl = document.getElementById('r-bars');
+    sorted.forEach((item,i) => {
+      const t = TYPES[item.k];
+      const pct = Math.round((item.s/maxS)*100);
+      barsEl.innerHTML += `
+        <div class="r-bar-row">
+          <span class="r-bar-emoji">${t.emoji}</span>
+          <span class="r-bar-name">${t.name.split('–')[0].split('—')[0].trim()}</span>
+          <div class="r-bar-track"><div class="r-bar-fill" style="width:0%;background:${t.color}" id="bar-${item.k}"></div></div>
+          <span class="r-bar-pct">${pct}%</span>
+        </div>`;
+    });
+    // Trigger animation
+    requestAnimationFrame(() => {
+      sorted.forEach(item => {
+        const el = document.getElementById('bar-'+item.k);
+        if(el) el.style.width = Math.round((item.s/maxS)*100)+'%';
+      });
+    });
+  }, 600);
+}
+
+// ─── RADAR CHART ───
+function buildRadar(sorted, maxS) {
+  const cx=150,cy=150,R=105;
+  const angles = TK.map((_,i) => (360/7)*i);
+  function p2xy(r,a){ const rad=(a-90)*Math.PI/180; return [cx+r*Math.cos(rad),cy+r*Math.sin(rad)]; }
+  function poly(scale){ return TK.map((_,i)=>p2xy(R*scale,angles[i]).join(',')).join(' '); }
+
+  const dataPoints = TK.map((k,i) => {
+    const val = scores[k]/Math.max(maxS,1);
+    return p2xy(R*Math.max(val,0.05),angles[i]).join(',');
+  }).join(' ');
+
+  const labels = TK.map((k,i) => {
+    const [x,y] = p2xy(R+24,angles[i]);
+    const t = TYPES[k];
+    return `<text x="${x}" y="${y}" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="600" fill="${t.color}">${t.emoji}</text>`;
+  }).join('');
+
+  const dots = TK.map((k,i) => {
+    const val = scores[k]/Math.max(maxS,1);
+    const [x,y] = p2xy(R*Math.max(val,0.05),angles[i]);
+    return `<circle cx="${x}" cy="${y}" r="4" fill="#8b5cf6" stroke="white" stroke-width="2"/>`;
+  }).join('');
+
+  return `<svg viewBox="0 0 300 300">
+    <polygon points="${poly(1)}" fill="none" stroke="#e2e8f0" stroke-width="1"/>
+    <polygon points="${poly(.66)}" fill="none" stroke="#e2e8f0" stroke-width=".5"/>
+    <polygon points="${poly(.33)}" fill="none" stroke="#e2e8f0" stroke-width=".5"/>
+    ${TK.map((_,i)=>{const[x,y]=p2xy(R,angles[i]);return `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="#e2e8f0" stroke-width=".5"/>`;}).join('')}
+    <polygon points="${dataPoints}" fill="rgba(139,92,246,.15)" stroke="#8b5cf6" stroke-width="2.5"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
+// ─── DESCRIPTIONS & TRAITS ───
+function getDescription(k) {
+  const d = {
+    captain: "Du blickst hoffnungsvoll nach vorn und willst nicht nur mitreden, sondern aktiv mitgestalten. Zukunft ist für dich ein Möglichkeitsraum voller Chancen – und du packst an, damit sie Wirklichkeit wird.",
+    fluxus: "Neugierig, kreativ und immer offen für Überraschungen. Die Zukunft ist dein Spielplatz – du probierst aus, staunst und findest im Chaos die besten Ideen.",
+    techno: "Du glaubst an die Kraft der Technologie und siehst in KI, Daten und digitaler Vernetzung die Schlüssel für eine bessere Welt. Innovation ist für dich kein Buzzword, sondern Alltag.",
+    oeko: "Für dich beginnt Zukunft mit der Erde. Du denkst in Kreisläufen, träumst von regenerativen Städten und weißt: Echte Innovation heißt, mit der Natur statt gegen sie zu arbeiten.",
+    routinier: "Stabil, pragmatisch und stark im Hier und Jetzt verankert. Du weißt: Bevor man die Welt rettet, muss erstmal der Alltag laufen. Und der läuft bei dir.",
+    retro: "Du schätzt Traditionen, bewährte Werte und das Analoge. Nicht alles Neue ist besser – und du hast den Mut, das laut zu sagen. Manchmal trotzig, aber nie ohne Haltung.",
+    muessig: "Du musst gar nichts – und genau das ist deine Stärke. Souverän, gelassen und selbstbestimmt. Während andere optimieren, genießt du. Dein Nichtstun ist keine Schwäche, sondern eine Haltung."
+  };
+  return d[k]||'';
+}
+function getTraits(k) {
+  const t = {
+    captain:["Visionär","Gestaltungswillig","Optimistisch","Mutig"],
+    fluxus:["Kreativ","Experimentierfreudig","Neugierig","Spontan"],
+    techno:["Technikaffin","Innovativ","Datengetrieben","Vernetzt"],
+    oeko:["Nachhaltig","Ganzheitlich","Naturverbunden","Regenerativ"],
+    routinier:["Pragmatisch","Verlässlich","Alltagsstark","Realistisch"],
+    retro:["Traditionsbewusst","Kritisch","Authentisch","Standhaft"],
+    muessig:["Souverän","Gelassen","Selbstbestimmt","Autonom"]
+  };
+  return t[k]||[];
+}
+
+// ─── SHARE ───
+function showShareCard() {
+  const sorted = TK.map(k=>({k,s:scores[k]})).sort((a,b)=>b.s-a.s);
+  const w = sorted[0], r = sorted[1];
+  const wt = TYPES[w.k], rt = TYPES[r.k];
+  const maxS = Math.max(...sorted.map(x=>x.s),1);
+  const kombi = getKombiText(w.k, r.k);
+
+  const ov = document.createElement('div');
+  ov.className = 'share-overlay';
+  ov.onclick = (e) => { if(e.target===ov) ov.remove(); };
+  ov.innerHTML = `
+    <div class="share-card">
+      <div class="share-card-center">
+        <div class="share-card-emoji">${wt.emoji}</div>
+        <div class="share-card-name">${wt.name}</div>
+        <div class="share-card-sub">${wt.sub}</div>
+      </div>
+      <div class="share-card-kombi">
+        <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px">
+          <span style="font-size:1rem">${wt.emoji}</span>
+          <span style="font-size:.7rem;color:#94a3b8">+</span>
+          <span style="font-size:1rem">${rt.emoji}</span>
+        </div>
+        <div class="share-card-kombi-text">„${kombi}"</div>
+      </div>
+      <div class="share-card-types">
+        ${TK.map(k=>{const t=TYPES[k];const pct=Math.round((scores[k]/maxS)*100);return `<div class="share-card-type"><span class="share-card-type-emoji">${t.emoji}</span><span class="share-card-type-pct" style="color:${t.color}">${pct}%</span></div>`;}).join('')}
+      </div>
+      <div class="share-card-footer">zukunftsquiz.de · 2026</div>
+      <div class="share-card-tip">
+        <div class="share-card-tip-text">📱 Screenshot machen & teilen!</div>
+      </div>
+      <button class="share-close" onclick="this.closest('.share-overlay').remove()">Schließen</button>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
+function copyLink() {
+  const url = window.location.href.split('?')[0];
+  if(navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(()=>alert('Link kopiert!')).catch(()=>prompt('Link kopieren:',url));
+  } else { prompt('Link kopieren:',url); }
+}
+</script>
+</body>
+</html>
